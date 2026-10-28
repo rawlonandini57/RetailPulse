@@ -1,0 +1,26 @@
+# RetailPulse -- app dependencies. This is the file Streamlit Community Cloud installs.
+#
+# It is deliberately small. Cloud reads the root `requirements.txt` and there is no way to
+# point it at a different file, so whatever lives here is what the public demo has to install
+# before it can serve a page. Keeping Prophet, TensorFlow, XGBoost, SHAP and Evidently here
+# meant a ~2.5 GB install on every cold start of the deliverable worth 30% of the grade, with
+# a real chance of failing outright on the Stan toolchain that Prophet needs.
+#
+# The full modelling stack lives in `requirements-ml.txt`. Run the models with:
+#     pip install -r requirements-ml.txt
+#
+# This split is safe because the dashboard never imports a model. It reads only the small
+# committed aggregates in `data/processed/` -- see `app/dashboard_data.py`, which is forbidden
+# from touching `data/raw/`, and `tests/test_dashboard.py`, which enforces it with a spy.
+#
+# Ranges, not exact pins. Local development runs Python 3.14 / pandas 3.0; Cloud runs the
+# version named in `.python-version`. An exact pin would fail to resolve on one of them.
+# See risk R1 in docs/superpowers/specs/2026-10-04-retailpulse-design.md.
+
+# --- core data + app -------------------------------------------------------
+# The only three the dashboard actually imports. Verified against every import in app/:
+# pandas, streamlit, and the standard library. numpy arrives with pandas but is listed
+# because src/ reads it directly.
+pandas>=2.2
+numpy>=1.26
+streamlit>=1.37,<2
